@@ -88,6 +88,11 @@ python -m pip install --no-build-isolation -r requirements.txt
 echo "[CityGaussian setup] installing CityGaussian requirements..."
 python -m pip install --no-build-isolation -r requirements/CityGS.txt
 
+echo "[CityGaussian setup] pinning Lightning without upgrading the official torch stack..."
+# Installing lightning normally may upgrade torch/torchvision to a newer CUDA
+# wheel. Keep the official torch==2.0.1+cu118 stack from pyt201_cu118.txt.
+python -m pip install --no-deps "lightning==2.3.3" "pytorch-lightning==2.3.3"
+
 echo "[CityGaussian setup] verifying imports and GPU..."
 python - <<'PY'
 import sys

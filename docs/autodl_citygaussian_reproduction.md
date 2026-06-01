@@ -294,6 +294,47 @@ export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 ```
 
+### 安装 `lightning` 后 PyTorch 被升级到 2.8/cu128
+
+如果 smoke test 显示：
+
+```text
+torch: 2.8.0+cu128
+undefined symbol: _ZN3c1017RegisterOperatorsD1Ev
+ModuleNotFoundError: No module named 'diff_gaussian_rasterization'
+```
+
+说明 `lightning` 安装时把官方推荐的 `torch==2.0.1+cu118` 升级成了不匹配的新版本，导致 `torchvision` 和 CUDA 扩展 ABI 不兼容。
+
+修复命令：
+
+```bash
+source /root/miniconda3/etc/profile.d/conda.sh
+conda activate gspl
+
+python -m pip uninstall -y torch torchvision torchaudio triton
+python -m pip install --no-cache-dir \
+  torch==2.0.1+cu118 \
+  torchvision==0.15.2+cu118 \
+  torchaudio==2.0.2+cu118 \
+  --extra-index-url https://download.pytorch.org/whl/cu118
+
+python -m pip install --no-deps \
+  lightning==2.3.3 \
+  pytorch-lightning==2.3.3 \
+  -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+cd ~/paper-reproduce-20261/third_party/CityGaussian
+export CUDA_HOME=/usr/local/cuda
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
+python -m pip install --no-build-isolation -r requirements.txt
+python -m pip install --no-build-isolation -r requirements/CityGS.txt
+
+python -c "import torch; import torchvision; import lightning; import diff_gaussian_rasterization; print(torch.__version__, torch.cuda.is_available())"
+```
+
 ## 10. 当前最小任务
 
 第一天只完成这三件事：
