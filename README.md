@@ -23,6 +23,24 @@
 - [paper1_up_gaussian_checklist.md](paper1_up_gaussian_checklist.md)：论文一的实验步骤、消融表、图表清单和写作大纲。
 - [paper2_gc_worldrecon_checklist.md](paper2_gc_worldrecon_checklist.md)：论文二的实验步骤、指标、图表清单和写作大纲。
 - [weekly_progress_template.md](weekly_progress_template.md)：每周实验与写作记录模板。
+- [docs/autodl_citygaussian_reproduction.md](docs/autodl_citygaussian_reproduction.md)：AutoDL 复现 CityGaussian/CityGaussianV2 的环境、脚本和实验说明。
+
+## AutoDL 复现入口
+
+在 AutoDL 中建议先执行：
+
+```bash
+git clone https://github.com/pythonxpy/paper-reproduce-20261.git
+cd paper-reproduce-20261
+bash scripts/autodl_setup_citygaussian.sh
+bash scripts/run_citygaussian_v2_smoke.sh
+```
+
+CityGaussianV2 通过后，再执行：
+
+```bash
+bash scripts/run_citygaussian_v1_smoke.sh
+```
 
 ## 建议推进顺序
 
