@@ -19,6 +19,10 @@
 - [research_directions.md](research_directions.md)：两个研究方向的完整方案，包括问题、方法、数据集、对比方法、指标和风险。
 - [experiment_matrix.md](experiment_matrix.md)：实验配置矩阵，包括主实验、消融实验、鲁棒性实验和结果表格模板。
 - [proposal_outline.md](proposal_outline.md)：开题报告/论文初稿提纲，可直接扩写成中文论文结构。
+- [execution_guide.md](execution_guide.md)：两篇论文从复现、实验到写作的总执行手册。
+- [paper1_up_gaussian_checklist.md](paper1_up_gaussian_checklist.md)：论文一的实验步骤、消融表、图表清单和写作大纲。
+- [paper2_gc_worldrecon_checklist.md](paper2_gc_worldrecon_checklist.md)：论文二的实验步骤、指标、图表清单和写作大纲。
+- [weekly_progress_template.md](weekly_progress_template.md)：每周实验与写作记录模板。
 
 ## 建议推进顺序
 
@@ -26,3 +30,13 @@
 2. 用 DTU 或 Tanks and Temples 做小规模可控验证。
 3. 再扩展到 MatrixCity、KITTI-360 或 ScanNet++ 等大场景/真实视频数据。
 4. 如果时间允许，把方向二作为生成视频场景下的补充实验或未来工作。
+
+## 当前第一步
+
+先完成论文一的最小闭环：
+
+1. 选定 DTU 或 Tanks and Temples 的 1 个场景。
+2. 跑通 3DGS baseline。
+3. 跑通 2DGS 或 CityGaussianV2 baseline。
+4. 接入一种几何先验，优先深度或法线。
+5. 记录第一周实验到 `experiments/week01_baseline.md`。
