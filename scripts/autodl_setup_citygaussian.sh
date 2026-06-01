@@ -80,10 +80,13 @@ else
 fi
 
 echo "[CityGaussian setup] installing common requirements..."
-python -m pip install -r requirements.txt
+# CityGaussian depends on CUDA extensions such as diff-gaussian-rasterization.
+# Their setup.py imports torch during wheel metadata/build, so pip build
+# isolation would hide the torch package that was installed above.
+python -m pip install --no-build-isolation -r requirements.txt
 
 echo "[CityGaussian setup] installing CityGaussian requirements..."
-python -m pip install -r requirements/CityGS.txt
+python -m pip install --no-build-isolation -r requirements/CityGS.txt
 
 echo "[CityGaussian setup] verifying imports and GPU..."
 python - <<'PY'

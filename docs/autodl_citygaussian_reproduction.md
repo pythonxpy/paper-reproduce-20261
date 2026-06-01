@@ -258,6 +258,42 @@ AutoDL 有时访问 GitHub 或 Hugging Face 不稳定。可以：
 - 在本地下载后上传到 AutoDL 数据盘。
 - 使用 Hugging Face 镜像或 `hf_transfer`。
 
+### diff-gaussian-rasterization 构建时报 `No module named 'torch'`
+
+如果看到类似错误：
+
+```text
+ModuleNotFoundError: No module named 'torch'
+ERROR: Failed to build diff-gaussian-rasterization
+```
+
+原因通常不是当前环境没有 PyTorch，而是 `pip` 默认开启 build isolation，构建 CUDA 扩展时临时环境看不到已经安装好的 `torch`。
+
+解决方法：
+
+```bash
+conda activate gspl
+cd ~/paper-reproduce-20261/third_party/CityGaussian
+python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+python -m pip install --no-build-isolation -r requirements.txt
+python -m pip install --no-build-isolation -r requirements/CityGS.txt
+```
+
+如果后续报 `CUDA_HOME`，先检查：
+
+```bash
+which nvcc
+echo $CUDA_HOME
+```
+
+AutoDL 常见设置为：
+
+```bash
+export CUDA_HOME=/usr/local/cuda
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+```
+
 ## 10. 当前最小任务
 
 第一天只完成这三件事：
