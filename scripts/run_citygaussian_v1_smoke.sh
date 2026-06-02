@@ -21,6 +21,12 @@ conda activate "$ENV_NAME"
 cd "$REPO_DIR"
 git fetch --all --prune
 
+# AutoDL users often shallow-clone only the main branch for speed. In that
+# case `git branch -r` will not show V1-Original until we fetch it explicitly.
+if ! git show-ref --verify --quiet "refs/remotes/origin/${V1_BRANCH}"; then
+  git fetch --depth 1 origin "${V1_BRANCH}" || true
+fi
+
 if git show-ref --verify --quiet "refs/remotes/origin/${V1_BRANCH}"; then
   git checkout "$V1_BRANCH"
 elif git show-ref --verify --quiet "refs/remotes/origin/V1-original"; then
