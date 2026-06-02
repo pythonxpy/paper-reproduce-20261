@@ -72,12 +72,22 @@ case "$CUDA_TAG" in
 esac
 
 if [ -f "$TORCH_REQ" ]; then
-  echo "[CityGaussian setup] installing PyTorch requirements: $TORCH_REQ"
+echo "[CityGaussian setup] installing PyTorch requirements: $TORCH_REQ"
   python -m pip install -r "$TORCH_REQ"
 else
   echo "Cannot find $TORCH_REQ in $REPO_DIR" >&2
   exit 1
 fi
+
+echo "[CityGaussian setup] pinning build/runtime compatibility packages..."
+# Torch 2.0.1/torchvision 0.15.2 are more stable with NumPy 1.x. NumPy 2.x can
+# break old compiled extensions with _ARRAY_API errors. setuptools provides
+# pkg_resources, which Lightning still imports.
+python -m pip install --force-reinstall \
+  "numpy==1.26.4" \
+  "setuptools==69.5.1" \
+  "wheel" \
+  "packaging"
 
 echo "[CityGaussian setup] installing common requirements..."
 # CityGaussian depends on CUDA extensions such as diff-gaussian-rasterization.
@@ -92,6 +102,18 @@ echo "[CityGaussian setup] pinning Lightning without upgrading the official torc
 # Installing lightning normally may upgrade torch/torchvision to a newer CUDA
 # wheel. Keep the official torch==2.0.1+cu118 stack from pyt201_cu118.txt.
 python -m pip install --no-deps "lightning==2.3.3" "pytorch-lightning==2.3.3"
+
+echo "[CityGaussian setup] final torch stack check..."
+python - <<'PY'
+import numpy
+import pkg_resources
+import torch
+import torchvision
+
+print("numpy:", numpy.__version__)
+print("torch:", torch.__version__, torch.cuda.is_available())
+print("torchvision:", torchvision.__version__)
+PY
 
 echo "[CityGaussian setup] verifying imports and GPU..."
 python - <<'PY'

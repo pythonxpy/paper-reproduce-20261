@@ -335,6 +335,43 @@ python -m pip install --no-build-isolation -r requirements/CityGS.txt
 python -c "import torch; import torchvision; import lightning; import diff_gaussian_rasterization; print(torch.__version__, torch.cuda.is_available())"
 ```
 
+### `diff_trim_surfel_rasterization` 编译时报 `glm/glm.hpp` 缺失
+
+如果看到：
+
+```text
+fatal error: glm/glm.hpp: No such file or directory
+```
+
+说明手动 clone 的 `diff-surfel-rasterization` 没有初始化子模块。修复方式：
+
+```bash
+cd /tmp/diff-surfel-rasterization
+git submodule update --init --recursive
+
+export CUDA_HOME=/usr/local/cuda
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
+python -m pip install ninja -i https://pypi.tuna.tsinghua.edu.cn/simple
+python -m pip install --no-build-isolation --no-cache-dir .
+```
+
+安装后不要在源码目录里验证 import，否则 Python 会优先导入源码目录，可能出现 `_C` circular import。切到 `/tmp` 或任意非源码目录再验证：
+
+```bash
+cd /tmp
+python - <<'PY'
+import torch
+import diff_gaussian_rasterization
+import diff_trim_gaussian_rasterization
+import diff_trim_surfel_rasterization
+
+print("torch:", torch.__version__, torch.cuda.is_available())
+print("rasterizers: ok")
+PY
+```
+
 ## 10. 当前最小任务
 
 第一天只完成这三件事：
