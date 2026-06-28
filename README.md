@@ -58,3 +58,6 @@ bash scripts/run_citygaussian_v1_smoke.sh
 3. 跑通 2DGS 或 CityGaussianV2 baseline。
 4. 接入一种几何先验，优先深度或法线。
 5. 记录第一周实验到 `experiments/week01_baseline.md`。
+# CityGaussian-UAV advisor brief
+
+- [CityGaussian-UAV 项目导师汇报梳理（2026-06-28）](docs/citygaussian_uav_advisor_brief_2026-06-28.md)
